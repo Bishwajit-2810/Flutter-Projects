@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/database/habit.dart';
 import 'package:habit_tracker/database/habit_db.dart';
-import 'package:habit_tracker/habit_util.dart';
-import 'package:habit_tracker/my_drawer.dart';
-import 'package:habit_tracker/my_habit_tile.dart';
-import 'package:habit_tracker/my_heat_map.dart';
+import 'package:habit_tracker/util/habit_util.dart';
+import 'package:habit_tracker/components/my_drawer.dart';
+import 'package:habit_tracker/components/my_habit_tile.dart';
+import 'package:habit_tracker/components/my_heat_map.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {

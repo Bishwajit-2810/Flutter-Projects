@@ -3,7 +3,7 @@ import 'package:habit_tracker/database/habit_db.dart';
 import 'package:habit_tracker/theme/theme_controller.dart';
 import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
