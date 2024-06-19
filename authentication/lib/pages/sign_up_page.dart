@@ -1,16 +1,17 @@
-import 'package:authentication/components/my_button.dart';
-import 'package:authentication/components/my_text_field.dart';
-import 'package:authentication/components/square_tile.dart';
 import 'package:authentication/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  final void Function()? onTap;
-  LoginPage({super.key, required this.onTap});
+import '../components/my_text_field.dart';
+import '../components/my_button.dart';
+import '../components/square_tile.dart';
 
+class SignUpPage extends StatelessWidget {
+  final void Function()? onTap;
+  SignUpPage({super.key, required this.onTap});
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
-                  const Text("Welcome back you've been missed"),
+                  const Text("Let's create an account for you!"),
                   const SizedBox(
                     height: 20,
                   ),
@@ -57,28 +58,22 @@ class LoginPage extends StatelessWidget {
                     obscureText: true,
                   ),
                   const SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
-                  // forgot button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
+                  //user  password
+                  MyTextField(
+                    controller: confirmPasswordController,
+                    hintText: "Confirm password",
+                    obscureText: true,
                   ),
 
                   const SizedBox(
-                    height: 25,
+                    height: 30,
                   ),
                   // login button
                   MyButton(
-                    text: "Sign In",
-                    onTap: () => signInUser(context),
+                    onTap: () => signUpUser(context),
+                    text: "Sign Up",
                   ),
                   const SizedBox(
                     height: 50,
@@ -125,14 +120,14 @@ class LoginPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Not a member?"),
+                      const Text("Already a member?"),
                       const SizedBox(
                         width: 5,
                       ),
                       GestureDetector(
                         onTap: onTap,
                         child: const Text(
-                          "Register Now",
+                          "Login Now",
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -150,7 +145,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void signInUser(BuildContext context) async {
+  void signUpUser(BuildContext context) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -160,14 +155,23 @@ class LoginPage extends StatelessWidget {
       },
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: userNameController.text,
-        password: passwordController.text,
-      );
-      Navigator.pop(context);
-      successSnackbar(
-        context,
-      );
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: userNameController.text,
+          password: passwordController.text,
+        );
+        Navigator.pop(context);
+        successSnackbar(
+          context,
+        );
+      } else {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Password don't match!"),
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       errorSnackbar(context, e.code);
@@ -175,7 +179,7 @@ class LoginPage extends StatelessWidget {
   }
 
   void successSnackbar(BuildContext context) {
-    const snackBar = SnackBar(content: Text("Login successful"));
+    const snackBar = SnackBar(content: Text("SignUp successful"));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
